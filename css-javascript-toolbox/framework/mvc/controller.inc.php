@@ -176,6 +176,11 @@ abstract class CJTController extends CJTHookableClass {
 																$request = null,
 																$overrideControllersPath = null,
 																$overrideControllersPrefix = null) {
+		// Validate controller name to prevent path traversal attacks
+		if (!self::isValidControllerName($name)) {
+			throw new Exception('Invalid controller name: ' . esc_html($name));
+		}
+
 		// Import controller file.
 		$pathToControllers = $overrideControllersPath ? $overrideControllersPath : CJTOOLBOX_CONTROLLERS_PATH;
 		$controllerFile = "{$pathToControllers}/{$name}.php";
@@ -184,6 +189,36 @@ abstract class CJTController extends CJTHookableClass {
 		$class = self::getClassName($name, 'Controller', $overrideControllersPrefix);
 		// Instantiate controller class.
 		return new $class($hasView, $request, $overrideControllersPath, $overrideControllersPrefix);
+	}
+
+	/**
+	* Validate controller name to prevent path traversal attacks
+	*
+	* @param string $name Controller name to validate
+	* @return bool True if valid, false otherwise
+	*/
+	private static function isValidControllerName($name) {
+		// Check for null or empty string
+		if (empty($name) || !is_string($name)) {
+			return false;
+		}
+
+		// Check for path traversal attempts
+		if (strpos($name, '..') !== false) {
+			return false;
+		}
+
+		// Check for directory separators
+		if (strpos($name, '/') !== false || strpos($name, '\\') !== false) {
+			return false;
+		}
+
+		// Only allow alphanumeric characters, hyphens, and underscores
+		if (!preg_match('/^[a-zA-Z0-9_-]+$/', $name)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

@@ -326,8 +326,9 @@ class CJTExtensions extends CJTHookableClass {
                                     DIRECTORY_SEPARATOR . 'plugin.php';
 
 					$incomapatibleAddon = $this->incompatibleAddons[$extension['name']];
+                    // Pass 'false' as the third parameter to get_plugin_data to prevent translation
                     $addonVersion = get_plugin_data($extension['pluginFile'], false, false)['Version'];
-					$currentVersion = get_plugin_data( CJTOOLBOX_PLUGIN_FILE )['Version'];
+					$currentVersion = get_plugin_data(CJTOOLBOX_PLUGIN_FILE, false, false)['Version'];
 
 					// Only show notice if addon version is less than 11.
 					if ( $addonVersion < 11) {

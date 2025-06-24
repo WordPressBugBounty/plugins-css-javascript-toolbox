@@ -211,9 +211,8 @@ class cssJSToolbox extends CJTHookableClass
 	*/
 	public static function getText( $text )
     {
-		// Make sure to don't use $this while calling!
-		// $this might be an object other than CssJSToolbox!
-		return self::__callStatic( 'cssJSToolbox.ongettext', array( __( $text, CJTOOLBOX_TEXT_DOMAIN ) ) );
+		// Simply return text without any translation attempts
+		return $text;
 	}
 
 	/**

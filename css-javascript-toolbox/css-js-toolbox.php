@@ -3,10 +3,11 @@
 Plugin Name: CSS & JavaScript Toolbox
 Plugin URI: https://css-javascript-toolbox.com/
 Description: Easily add CSS, JavaScript, HTML and PHP code to unique CJT code blocks and assign them anywhere on your website.
-Version: 12.0.1
+Version: 12.0.3
 Author: Wipeout Media
-Stable tag: 12.0.1
 Author URI: https://css-javascript-toolbox.com
+Text Domain: css-javascript-toolbox
+Domain Path: /locals/languages/
 License:
 
 The Software is package as a WordPress¨ plugin.  The PHP code associated with the Software is licensed under the GPL version 2.0 license (as found at http://www.gnu.org/licenses/gpl-2.0.txt GNU/GPLv2 or "GPLv2"). You may redistribute, repackage, and modify the PHP code as you see fit and as consistent with GPLv2.
@@ -99,7 +100,7 @@ class CJTPlugin extends CJTHookableClass
 	/**
 	*
 	*/
-	const VERSION = '12.0.1';
+	const VERSION = '12.0.3';
 
 	/**
 	*
@@ -354,15 +355,8 @@ class CJTPlugin extends CJTHookableClass
 	*/
 	public function onconnected( $observer, $state )
 	{
-
-		// In all cases that we'll process the request load the localization file.
-		load_plugin_textdomain( CJTOOLBOX_TEXT_DOMAIN, false, CJTOOLBOX_LANGUAGES );
-
-		do_action( CJTPluggableHelper::ACTION_CJT_TEXT_DOMAIN_LOADED );
-
-		// Always connet  the access point!
+		// Always connect the access point!
 		return $state;
-
 	}
 
 }// End Class

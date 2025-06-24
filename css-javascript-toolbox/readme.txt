@@ -8,7 +8,7 @@ License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 Requires at least: 5.0 or higher
 Requires PHP: 7.4.0
 Tested up to: 6.6
-Stable tag: 12.0.1
+Stable tag: 12.0.3
 
 Add code snippets (CSS, JavaScript, HTML, PHP) to your site and choose where it goes. Feel confident with 10 years of security & reliability.
 
@@ -121,6 +121,16 @@ The hook location feature gives you further control over the outputting of your 
 Due to the overwhelming amount of emails we get for users requesting support for our CJT plugins, we cannot provide support for the CJT Free plugin (hosted here on WordPress.org) at this stage unfortunately. If you wish to receive priority support, please visit our CJT website and then [purchase a license for any of our premium CJT PLUS products](https://css-javascript-toolbox.com/pricing).
 
 == Changelog ==
+= 12.0.3 =
+* Security: Fixed path traversal vulnerability in controller routing
+* Security: Added input validation to prevent arbitrary file inclusion
+* Enhancement: Improved plugin security and stability
+
+= 12.0.2 =
+* Fix: Text domain header issue
+* Fix: Old PHP notices and warnings
+* Enhancement: Improved plugin stability
+
 = 12.0.1 =
 * Fix: Headers already sent issue
 * Fix: Old PHP notices and warnings

@@ -114,8 +114,40 @@ abstract class CJTAccessPoint extends CJTHookableClass implements CJTIAccessPoin
 			$this->overrideControllersPath = $accessPointClassLoader->getPath() . DIRECTORY_SEPARATOR . 'controllers';
 			$this->overrideControllersPrefix = $accessPointClassLoader->getPrefix();
 		}
-		// Initialize!
-		$this->controllerName = $this->ongetdefaultcontrollername(isset($_REQUEST['controller']) ? esc_html($_REQUEST['controller']) : $defaultController);
+		// Initialize with validation!
+		$requestedController = isset($_REQUEST['controller']) ? esc_html($_REQUEST['controller']) : $defaultController;
+		$this->controllerName = $this->ongetdefaultcontrollername($this->sanitizeControllerName($requestedController, $defaultController));
+	}
+
+	/**
+	* Sanitize controller name to prevent path traversal attacks
+	*
+	* @param string $controllerName The requested controller name
+	* @param string $defaultController The default controller to use if validation fails
+	* @return string Safe controller name
+	*/
+	private function sanitizeControllerName($controllerName, $defaultController) {
+		// Check for null or empty string
+		if (empty($controllerName) || !is_string($controllerName)) {
+			return $defaultController;
+		}
+
+		// Check for path traversal attempts
+		if (strpos($controllerName, '..') !== false) {
+			return $defaultController;
+		}
+
+		// Check for directory separators
+		if (strpos($controllerName, '/') !== false || strpos($controllerName, '\\') !== false) {
+			return $defaultController;
+		}
+
+		// Only allow alphanumeric characters, hyphens, and underscores
+		if (!preg_match('/^[a-zA-Z0-9_-]+$/', $controllerName)) {
+			return $defaultController;
+		}
+
+		return $controllerName;
 	}
 
 	/**
