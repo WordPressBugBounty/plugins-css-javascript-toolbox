@@ -31,20 +31,15 @@ $isCJTPLUSInstalled = file_exists(WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'css-jav
 		<span class="cjt-ver"><?php echo $versionText; ?></span>
 	</h2>
 
-	<?php
+    <div id="cjt-banner-bar-center--img" title="Click to know more about our fastest way to create code blocks with AI">
+        <a href="https://wpsnippets.ai/pricing?utm_source=cjt_free_user&utm_medium=dashboard_header&utm_campaign=click_for_premium_button" target="_blank">
+            <img src="<?php echo CJTOOLBOX_VIEWS_URL . '/blocks/manager/public/images/CJT_WP_Snippets_AI_banner.png'; ?>" style="max-width: 100%" alt="Click to know more about the next-generation, and faster way to create code blocks with AI!" />
+        </a>
+    </div>
 
-	if ( ! class_exists( 'CJTPlus' ) ) : ?>
-
-		<div id="cjt-banner-bar-center--img">
-            <a href="https://<?php echo cssJSToolbox::CJT_WEB_SITE_DOMAIN ?>/?utm_source=cjt_free_user&utm_medium=dashboard_header&utm_campaign=click_for_premium_button" target="_blank">
-                <img src="<?php echo CJTOOLBOX_VIEWS_URL . '/blocks/manager/public/images/click-for-premium.gif'; ?>" alt="Click to know more about the Premium version">
-            </a>
-		</div>
-
-        <script>
-            const existingCJTUser = '<?php echo get_option( '__existing_cjt_user', 'false' ); ?>';
-        </script>
-	<?php endif; ?>
+    <script>
+        const existingCJTUser = '<?php echo get_option( '__existing_cjt_user', 'false' ); ?>';
+    </script>
 
     <div id="cjt-banner-bar-right">
         <span class="cjt-banner-link">
