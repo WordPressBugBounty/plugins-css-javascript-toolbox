@@ -61,10 +61,12 @@ class CJTTemplatesManagerListTable extends WP_List_Table {
 			break;
 			case 'name':
 				// Display cell value as regular.
-				$value  = "<span class='template-name'>{$item->{$name}}</span>";
+				$value  = "<span class='template-name'>" . esc_html($item->{$name}) . "</span>";
 				// Show description. Truncate description/display breif desc.
 				$tweentyChunks = array_chunk(explode(' ', $item->description), 20);
 				$brief = implode(' ', array_shift($tweentyChunks));
+				// Escape the brief description to prevent XSS
+				$brief = esc_html($brief);
 				// Final text!
 				$value .= '<br />';
 				$value .= "<div class='description'><span>{$brief}</span>";

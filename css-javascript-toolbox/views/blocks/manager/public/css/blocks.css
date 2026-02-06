@@ -16,18 +16,9 @@ body{min-width: 700px;}
 }
 #cjt-banner-bar-center--img {
     position: absolute;
-    top: 0;
-    right: 10%;
+    top: 10px;
+    left: 30%;
     padding: 0;
-	filter: drop-shadow(0 0 8px rgba(0,0,0,0.1));
-}
-#cjt-banner-bar-center--img img {
-	border-radius: 6px;
-	overflow: hidden;
-	border: 1px solid #ccc;
-}
-#cjt-banner-bar-center--img:hover {
-	filter: drop-shadow(0 0 12px rgba(0,0,0,0.2));
 }
 #cjt-banner-bar-center p strong {
 	color: #005EA5;

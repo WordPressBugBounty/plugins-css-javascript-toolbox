@@ -430,18 +430,20 @@ class CJTBlocksCouplingController extends CJTController {
 
 					/** @todo Include Debuging info only if we're in debuging mode! */
 					if ( 1 ) {
-						// CODE UPDATED BY RBJ -- START
-                        if (trim($evaluatedCode) != ''):
-                            global $post;
-                            $checkMetaBlock = get_post_meta($post->ID, '__CJT-BLOCK-ID', true);
+							if (trim($evaluatedCode) != ''):
+								global $post;
+								// Defensive: $post may be null in some contexts, avoid reading ->ID on null.
+								$checkMetaBlock = null;
+								if ( isset($post) && is_object($post) && isset($post->ID) ) {
+									$checkMetaBlock = get_post_meta($post->ID, '__CJT-BLOCK-ID', true);
+								}
 
-                            if (!empty($checkMetaBlock) && $checkMetaBlock == $blockId):
-                                $evaluatedCode = "\n\n<!-- CJT Meta Block ({$blockId}) - {$block->name} - START -->\n{$evaluatedCode}\n<!-- CJT Meta Block ({$blockId}) - {$block->name} - END -->\n\n";
-                            else:
-                                $evaluatedCode = "\n\n<!-- CJT Global Block ({$blockId}) - {$block->name} - START -->\n{$evaluatedCode}\n<!-- CJT Global Block ({$blockId}) - {$block->name} - END -->\n\n";
-                            endif;
-                        endif;
-                        // CODE UPDATED BY RBJ -- END
+								if (!empty($checkMetaBlock) && $checkMetaBlock == $blockId):
+									$evaluatedCode = "\n\n<!-- CJT Meta Block ({$blockId}) - {$block->name} - START -->\n{$evaluatedCode}\n<!-- CJT Meta Block ({$blockId}) - {$block->name} - END -->\n\n";
+								else:
+									$evaluatedCode = "\n\n<!-- CJT Global Block ({$blockId}) - {$block->name} - START -->\n{$evaluatedCode}\n<!-- CJT Global Block ({$blockId}) - {$block->name} - END -->\n\n";
+								endif;
+							endif;
 					}
 
                     // Initialize block LOCATION array for the first time

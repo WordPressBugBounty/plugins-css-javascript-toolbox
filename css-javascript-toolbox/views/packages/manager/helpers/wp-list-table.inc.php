@@ -1,6 +1,6 @@
 <?php
 /**
-* 
+*
 */
 
 // Disallow direct access.
@@ -10,13 +10,13 @@ defined('ABSPATH') or die("Access denied");
 require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 
 /**
-* 
+*
 */
 class CJTPackagesManagerListTable extends WP_List_Table {
-	
+
 	/**
 	* put your comment there...
-	* 
+	*
 	*/
 	public function __construct() {
 		// Set hook suffix (E_ALL complain)!
@@ -25,9 +25,9 @@ class CJTPackagesManagerListTable extends WP_List_Table {
 		$args = array();
 		parent::__construct($args);
 	}
-	
+
 	/**
-	* 
+	*
 	*/
 	protected function column_default($item, $name) {
 		$value = null;
@@ -37,9 +37,9 @@ class CJTPackagesManagerListTable extends WP_List_Table {
 			break;
 			case 'name':
 				// Package name!
-				$value  = "<span class='package-name'>{$item->{$name}}</span>";
+				$value  = "<span class='package-name'>" . esc_html($item->{$name}) . "</span>";
 				// Description underneath the name!
-				$value .= "<br /><div class='description'><span>{$item->description}</span></div>";
+				$value .= "<br /><div class='description'><span>" . esc_html($item->description) . "</span></div>";
 				// Display row actions underneath template name column.
 				$actions = array();
 				// ----$actions['info'] = "<a href='#info({$item->id})'>" . cssJSToolbox::getText('Info') . '</a>';
@@ -68,10 +68,10 @@ class CJTPackagesManagerListTable extends WP_List_Table {
 		}
 		return $value;
 	}
-	
+
 	/**
 	* put your comment there...
-	* 
+	*
 	*/
 	public function get_bulk_actions() {
 		// Bulk ations.
@@ -81,7 +81,7 @@ class CJTPackagesManagerListTable extends WP_List_Table {
 		// Return actions!
 		return $actions;
 	}
-	
+
 	/**
 	 * Get a list of columns. The format is:
 	 * 'internal-name' => 'Title'
@@ -103,5 +103,5 @@ class CJTPackagesManagerListTable extends WP_List_Table {
 			'id' => cssJSToolbox::getText('ID'),
 		);
 	}
-	
+
 } // End class.

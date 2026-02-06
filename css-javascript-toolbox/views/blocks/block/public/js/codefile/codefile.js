@@ -1,61 +1,61 @@
 /**
-* 
-* 
-* 
-* 
+*
+*
+*
+*
 */
 
 /**
-* 
-* 
-* 
+*
+*
+*
 */
 (function($) {
-	
+
 	/**
 	* put your comment there...
-	* 
+	*
 	* @param block
 	*/
 	CJTBlockFile = function(block) {
-		
+
 		/**
 		* put your comment there...
-		* 
+		*
 		* @type Object
 		*/
 		this.file = {};
-		
+
         /**
         * put your comment there...
-        * 
+        *
         * @param event
         * @param block
         */
         var _onbeforedeleteblock = function(event, block) {
-            
+
             if (block === CJTBlockCodeFileView.block) {
-                
+
                 CJTBlockCodeFileView.deattach();
             }
-            
+
         };
-        
+
 		/**
 		* put your comment there...
-		* 
-		* 
+		*
+		*
 		*/
 		var _onopencodefiledialog = function(event) {
-            
+
 			// Switch Code Files Managed to current block.
             CJTBlockCodeFileView.switchTo(block);
-            
+
             block._onPaneledItems(event);
-            
+
             return false;
 		};
-		
+
 		/**
 		*
 		*
@@ -86,7 +86,7 @@
 			}
 		};
 		/**
-		* 
+		*
 		*
 		*
 		*/
@@ -98,10 +98,10 @@
 		};
 
 		/**
-		* 
 		*
 		*
-		*/		
+		*
+		*/
 		this.switchFile = function(codeFile) {
 			// INitialize.
 			var model = block.block;
@@ -116,13 +116,11 @@
 					this.file.activeFileId = rCodeFile.id;
 					this.file.name = rCodeFile.name;
 					this.file.type = rCodeFile.type;
-					
-                    // CODE ADDED BY RBJ -- START
+
                     if (!rCodeFile.code) {
                         rCodeFile.code = '';
                     }
                     model.aceEditor.$blockScrolling = Infinity;
-                    // CODE ADDED BY RBJ -- START
 
                     // Re-Initialize ACE Code Editor.
 					model.aceEditor.getSession().setValue(rCodeFile.code);
@@ -137,7 +135,7 @@
 			);
 			return promise;
 		};
-	
+
 		// Get All input file elements.
 		// sent from server, get the values.
 		// remove them.
@@ -150,14 +148,14 @@
 		);
 		// Remove all file inputs sent from server.
 		fileInputs.remove();
-		
+
 		// Switch editor language.
-        block._onswitcheditorlang({}, {lang : this.file.type ? this.file.type : block.block.get('editorLang', 'css')});		
-        
+        block._onswitcheditorlang({}, {lang : this.file.type ? this.file.type : block.block.get('editorLang', 'css')});
+
         block.toolbox.buttons['code-files'].callback = _onopencodefiledialog;
-        
+
         // Block Events
         block.block.box.on('BeforeDeleteBlock', _onbeforedeleteblock);
 	};
-	
+
 })(jQuery);

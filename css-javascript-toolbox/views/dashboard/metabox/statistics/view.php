@@ -1,13 +1,13 @@
 <?php
 /**
-* 
+*
 */
 
 // No direct access allowed.
 defined('ABSPATH') or die("Access denied");
 
 /**
-* 
+*
 */
 class CJTDashboardMetaboxStatisticsView extends CJTView {
 
@@ -19,10 +19,10 @@ class CJTDashboardMetaboxStatisticsView extends CJTView {
 	protected $inactiveMetaboxBlocks;
 	protected $scriptsPackage;
 	protected $templates;
-	
+
 	/**
 	* put your comment there...
-	* 
+	*
 	* @param mixed $info
 	* @return CJTInstallerNoticeView
 	*/
@@ -33,10 +33,10 @@ class CJTDashboardMetaboxStatisticsView extends CJTView {
 		self::enqueueStyles();
 		self::enqueueScripts();
 	}
-	
+
 	/**
 	* put your comment there...
-	* 
+	*
 	* @param mixed $tmpl
 	*/
 	public function display($tmpl = null) {
@@ -57,7 +57,7 @@ class CJTDashboardMetaboxStatisticsView extends CJTView {
 
 	/**
 	* put your comment there...
-	* 
+	*
 	*/
 	public static function enqueueScripts() {
 		// Use related scripts.
@@ -66,7 +66,7 @@ class CJTDashboardMetaboxStatisticsView extends CJTView {
 
 	/**
 	* put your comment there...
-	* 
+	*
 	*/
 	public static function enqueueStyles() {
 		// Use related scripts.

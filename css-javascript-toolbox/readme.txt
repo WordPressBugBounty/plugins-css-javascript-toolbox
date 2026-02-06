@@ -7,13 +7,13 @@ License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 Requires at least: 5.0 or higher
 Requires PHP: 7.4.0
-Tested up to: 6.6
-Stable tag: 12.0.4
+Tested up to: 6.8
+Stable tag: 12.0.6
 
-Add code snippets (CSS, JavaScript, HTML, PHP) to your site and choose where it goes. Feel confident with 10 years of security & reliability.
+Add CSS, JavaScript, PHP and HTML code snippets to your site. For AI-powered snippets, get our free plugin here: wpsnippets.ai
 
 == Description ==
-CSS & JavaScript Toolbox (or CJT) is a WordPress plugin that allows you to safely add CSS, JavaScript, PHP or HTML to unique code blocks that can be run anywhere on your website.
+Safely add CSS, JavaScript, PHP or HTML to unique code blocks, then choose where it goes on your site. For even more power, get our free AI-powered snippet plugin here: [WP Snippets AI](https://wpsnippets.ai/?utm_source=cjt_free_on_wordpress&utm_medium=readme_txt_description&utm_campaign=click_for_premium_link)
 
 ### IDEAL FOR: ###
 * **Making CSS front-end changes** - No need to modify theme files or work with tedious built-in theme options. Just create a CSS code block.
@@ -121,6 +121,14 @@ The hook location feature gives you further control over the outputting of your 
 Due to the overwhelming amount of emails we get for users requesting support for our CJT plugins, we cannot provide support for the CJT Free plugin (hosted here on WordPress.org) at this stage unfortunately. If you wish to receive priority support, please visit our CJT website and then [purchase a license for any of our premium CJT PLUS products](https://css-javascript-toolbox.com/pricing).
 
 == Changelog ==
+= 12.0.6 =
+* Security: Fixed sanitization vulnerability in Template Manager
+* Security: Fixed sanitization vulnerability in Blocks Coupling controller
+* Enhancement: Improved plugin security and stability
+
+= 12.0.5 =
+* Fixed: Improved plugin security and stability
+
 = 12.0.4 =
 * Fixed: Improved plugin security and stability
 

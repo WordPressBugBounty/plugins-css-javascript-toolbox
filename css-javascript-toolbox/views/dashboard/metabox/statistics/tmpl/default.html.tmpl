@@ -11,9 +11,13 @@
   $latestNew['pubDate'] = explode(' ', $latestNew['pubDate']);
   $latestNew['pubDate'][1] = "{$latestNew['pubDate'][1]}th";
   $latestNew['pubDate'] = join(' ', $latestNew['pubDate']);
+
+  // Remove the isolated "p" tag that contains an anchor tag with text "Source" from description.
+  $latestNew['description'] = preg_replace('/<p>\s*<a[^>]*>\s*Source\s*<\/a>\s*<\/p>/i', '', $latestNew['description']);
 ?>
+
 <div id="cjt-statcs-metabox-news">
-	<span class="cjt_dw_latestnewstitle"><span class="cjt-pub-date"><?php echo $latestNew['pubDate'] ?></span>,&nbsp;&nbsp;<?php echo cssJSToolbox::getText('Latest News:') ?> <a target="_blank" href="<?php echo $latestNew['link'] ?>"><?php echo $latestNew['title'] ?></a></span>
+	<span class="cjt_dw_latestnewstitle"><span class="cjt-pub-date"><?php echo $latestNew['pubDate'] ?></span>,&nbsp;&nbsp;<a target="_blank" href="https://wpsnippets.ai/pricing?utm_source=cjt_free_user&utm_medium=dashboard_header&utm_campaign=click_for_premium_button"><?php echo $latestNew['title'] ?></a></span>
 	<p class="cjt_dw_description"><?php echo $latestNew['description'] ?></p>
 </div>
 <hr />

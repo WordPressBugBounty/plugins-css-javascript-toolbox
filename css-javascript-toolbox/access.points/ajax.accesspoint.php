@@ -49,7 +49,6 @@ class CJTAjaxAccessPoint extends CJTAccessPoint {
 				# try to get module associated to passed module
 				$accessPointClassLoader = CJT_Framework_Autoload_Loader::autoLoad($_REQUEST['cjtajaxmodule']);
 
-                // CODE MODIFIED BY RBJ -- START
                 if ($accessPointClassLoader) {
                     if ($_REQUEST['cjtajaxmodule'] == 'ECMEHD') {
                         $this->overrideControllersPath =  dirname(__DIR__) . '-plus/CJTEnv/controllers';
@@ -58,7 +57,6 @@ class CJTAjaxAccessPoint extends CJTAccessPoint {
                     }
                     $this->overrideControllersPrefix = $accessPointClassLoader->getPrefix();
                 }
-                // CODE MODIFIED BY RBJ -- END
 			}
 			// Instantiate controller.
 			$controller = parent::route($loadView, $request);
