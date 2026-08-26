@@ -46,7 +46,8 @@ class CJTBlocksBackupsController extends CJTAjaxController {
 	public function createAction() {
 		$backupData = array();
 		// Get posted backup data.
-		$backupData['name'] = filter_input(INPUT_GET, 'name', FILTER_SANITIZE_STRING);
+		$backupName = filter_input(INPUT_GET, 'name', FILTER_UNSAFE_RAW);
+		$backupData['name'] = is_string($backupName) ? sanitize_text_field($backupName) : '';
 		$backupRowIndex = filter_input(INPUT_GET, 'rowIndex', FILTER_SANITIZE_NUMBER_INT);
 		// Create new backup -- Data will be retruned along with new backup Id.
 		$backupData = $this->model->create($backupData);

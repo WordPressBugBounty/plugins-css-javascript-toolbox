@@ -95,7 +95,12 @@ class CJT_Controllers_Coupling_Shortcode_Block extends CJTHookableClass {
 					// CJT Shortcode markup interface (CSMI)!
 					// CSMI is HTML markup to identify the CJT block Shortcode replacement.
 
-					$__tag = filter_var($this->options['tag'], FILTER_SANITIZE_EMAIL);
+					// SECURITY: The wrapper tag name is user-controllable via the shortcode
+					// 'tag' attribute. It must NEVER be allowed to become an executable.
+					// Normalise tag to a bare, lowercase
+					// element name and validate against a strict allow-list of safe container
+					// elements, falling back to the default 'span' otherwise.
+					$__tag = $this->getSafeTag($this->options['tag']);
 
 					// CODE UPDATED -- START
                     $replacement = "\n\n<!-- CJT Shortcode Block ({$block->id}) - {$block->name} - START -->\n
@@ -137,6 +142,30 @@ class CJT_Controllers_Coupling_Shortcode_Block extends CJTHookableClass {
 		}
 		// Return shortcode replacement string.
 		return $replacement;
+	}
+
+	/**
+	* Resolve a safe wrapper element name for the shortcode replacement.
+	*
+	*
+	* @param string $tag Raw tag value coming from the shortcode attributes.
+	* @return string A safe, allow-listed element name.
+	*/
+	protected function getSafeTag($tag) {
+		// Default / fallback tag.
+		$default = 'span';
+		// Strip to a bare element name: letters and digits only, lowercased.
+		$tag = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', (string) $tag));
+		// Allow-list of inert elements that are safe to use as a wrapper.
+		static $allowed = array(
+			'span', 'div', 'p', 'section', 'article', 'aside', 'header', 'footer',
+			'main', 'nav', 'figure', 'figcaption', 'blockquote', 'pre', 'code',
+			'ul', 'ol', 'li', 'dl', 'dt', 'dd',
+			'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+			'em', 'strong', 'small', 'mark', 'sub', 'sup', 'i', 'b', 'u', 's',
+			'abbr', 'cite', 'q', 'time', 'kbd', 'samp', 'var',
+		);
+		return in_array($tag, $allowed, true) ? $tag : $default;
 	}
 
 } // End class.

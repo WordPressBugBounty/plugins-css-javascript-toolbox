@@ -46,24 +46,39 @@ class CJTAjaxAccessPoint extends CJTAccessPoint {
 			$this->connected();
 			// IF Module-Prefix passed THEN Point to correct Controller path
 			if (isset($_REQUEST['cjtajaxmodule'])) {
-				# try to get module associated to passed module
-				$accessPointClassLoader = CJT_Framework_Autoload_Loader::autoLoad($_REQUEST['cjtajaxmodule']);
+				// Module prefixes are plain identifiers. Reject anything else so the
+				// request can never steer the controllers path outside the plugin.
+				$module = preg_replace('/[^A-Za-z0-9_]/', '', (string) $_REQUEST['cjtajaxmodule']);
 
-                if ($accessPointClassLoader) {
-                    if ($_REQUEST['cjtajaxmodule'] == 'ECMEHD') {
-                        $this->overrideControllersPath =  dirname(__DIR__) . '-plus/CJTEnv/controllers';
-                    } else {
-                        $this->overrideControllersPath = $accessPointClassLoader->getPath() .  DIRECTORY_SEPARATOR . 'controllers';
+                if ($module === 'ECMEHD') {
+                    // CJT PLUS environment controllers live at a fixed location.
+                    $this->overrideControllersPath =  dirname(__DIR__) . '-plus/CJTEnv/controllers';
+                    $this->overrideControllersPrefix = $module;
+                }
+                else if ($module !== '') {
+                    # Resolve WITHOUT registering. autoLoad() builds a pathless loader
+                    # for any unknown prefix, so every arbitrary module name used to
+                    # "resolve" and then produce a bogus "/controllers" path.
+                    $accessPointClassLoader = CJT_Framework_Autoload_Loader::getRegisteredLoader($module);
+                    $loaderPath = $accessPointClassLoader ? $accessPointClassLoader->getPath() : null;
+
+                    // Only override when the loader actually resolved a path.
+                    if ($loaderPath) {
+                        $this->overrideControllersPath = $loaderPath .  DIRECTORY_SEPARATOR . 'controllers';
+                        $this->overrideControllersPrefix = $accessPointClassLoader->getPrefix();
                     }
-                    $this->overrideControllersPrefix = $accessPointClassLoader->getPrefix();
                 }
 			}
 			// Instantiate controller.
 			$controller = parent::route($loadView, $request);
 			// Dispatch the call as its originally requested from ajax action!
-			$action = "wp_ajax_{$this->pageId}_{$_REQUEST['CJTAjaxAction']}";
-			// Fire Ajax action.
-			do_action($action);
+			if (isset($_REQUEST['CJTAjaxAction'])) {
+				$ajaxAction = preg_replace('/[^A-Za-z0-9_]/', '', (string) $_REQUEST['CJTAjaxAction']);
+				if ($ajaxAction !== '') {
+					// Fire Ajax action.
+					do_action("wp_ajax_{$this->pageId}_{$ajaxAction}");
+				}
+			}
 		}
 		return $controller;
 	}

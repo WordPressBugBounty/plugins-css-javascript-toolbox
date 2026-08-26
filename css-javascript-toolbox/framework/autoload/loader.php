@@ -72,7 +72,20 @@ class CJT_Framework_Autoload_Loader {
 		}
 		return isset(self::$instances[$prefix]) ? self::$instances[$prefix] : null;
 	}
-	
+
+	/**
+	* Get an already registered loader by its exact prefix.
+	*
+	* Unlike autoLoad() this never registers anything, so it is safe to call
+	* with a prefix that came from the request.
+	*
+	* @param string $prefix Loader prefix to look up.
+	* @return CJT_Framework_Autoload_Loader|null Loader when registered, NULL otherwise.
+	*/
+	public static function getRegisteredLoader($prefix) {
+		return isset(self::$instances[$prefix]) ? self::$instances[$prefix] : null;
+	}
+
 	/**
 	* Find ClassAutoloader instance used for loading specific class.
 	* 

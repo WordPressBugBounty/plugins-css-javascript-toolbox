@@ -65,7 +65,7 @@ defined('ABSPATH') or die("Access denied");
 
                         <span class="block-shortcode">
                             <span class="infobar-item-title"><?php echo cssJSToolbox::getText('Shortcode:') ?> </span>
-                            <input type="text" value="[cjtoolbox name='<?php echo $this->block->name ?>']" readonly="readonly" />
+                            <input type="text" value="[cjtoolbox name='<?php echo esc_attr($this->block->name) ?>']" readonly="readonly" />
                             <a class="copyshortcode" href="#"><?php echo cssJSToolbox::getText('Copy') ?></a>
                         </span>
 

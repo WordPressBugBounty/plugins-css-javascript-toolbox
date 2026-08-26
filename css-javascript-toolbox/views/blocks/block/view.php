@@ -177,7 +177,9 @@ class CJTBlocksBlockView extends CJTView {
 	*/
 	public function getMetaboxName() {
 		$tip = cssJSToolbox::getText('Click to update Block name');
-		return "<input name='cjtoolbox[{$this->block->id}][name]' type='text' class='block-name' value='{$this->block->name}' title='{$tip}' maxlength='50' />";
+		// Escape the stored block name for the HTML attribute context to prevent stored XSS (CVE-2025-13533).
+		$escapedName = esc_attr($this->block->name);
+		return "<input name='cjtoolbox[{$this->block->id}][name]' type='text' class='block-name' value='{$escapedName}' title='{$tip}' maxlength='50' />";
 	}
 
 	/**

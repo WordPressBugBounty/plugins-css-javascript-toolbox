@@ -1,5 +1,5 @@
 === CSS & JavaScript Toolbox ===
-Contributors: wipeoutmedia
+Contributors: wipeoutmedia, lazycodelab
 Author URL: https://css-javascript-toolbox.com
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EWDWF75JHT9Q6
 Tags: snippets, javascript, php, scripts, code
@@ -7,13 +7,13 @@ License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 Requires at least: 5.0 or higher
 Requires PHP: 7.4.0
-Tested up to: 6.8
-Stable tag: 12.0.6
+Tested up to: 7.0.4
+Stable tag: 12.0.7
 
-Add CSS, JavaScript, PHP and HTML code snippets to your site. For AI-powered snippets, get our free plugin here: wpsnippets.ai
+Add CSS, JavaScript, PHP and HTML code snippets to your site.
 
 == Description ==
-Safely add CSS, JavaScript, PHP or HTML to unique code blocks, then choose where it goes on your site. For even more power, get our free AI-powered snippet plugin here: [WP Snippets AI](https://wpsnippets.ai/?utm_source=cjt_free_on_wordpress&utm_medium=readme_txt_description&utm_campaign=click_for_premium_link)
+Safely add CSS, JavaScript, PHP or HTML to unique code blocks, then choose where it goes on your site.
 
 ### IDEAL FOR: ###
 * **Making CSS front-end changes** - No need to modify theme files or work with tedious built-in theme options. Just create a CSS code block.
@@ -121,6 +121,17 @@ The hook location feature gives you further control over the outputting of your 
 Due to the overwhelming amount of emails we get for users requesting support for our CJT plugins, we cannot provide support for the CJT Free plugin (hosted here on WordPress.org) at this stage unfortunately. If you wish to receive priority support, please visit our CJT website and then [purchase a license for any of our premium CJT PLUS products](https://css-javascript-toolbox.com/pricing).
 
 == Changelog ==
+= 12.0.7 =
+* Security: Fixed a stored XSS in the [cjtoolbox] shortcode (CVE-2025-14814) - the user-supplied `tag` attribute is now validated against a strict allow-list of inert HTML elements, so it can no longer be set to `script` (or any other executable/dangerous element) to wrap shortcode content in an executable tag
+* Security: Fixed authenticated stored XSS in the code-block admin screens (CVE-2025-13533) - the block name, assigned URLs and assignment expressions are now HTML-escaped everywhere they are rendered in the admin (esc_attr/esc_html/esc_textarea), and the block name is additionally sanitized server-side on save/create so quotes and angle brackets can no longer be persisted by bypassing the client-side validation
+* Security: Hardened the AJAX access point - the module prefix and action name from the request are now strictly validated, and an unrecognised module can no longer register a loader or redirect the controller lookup path
+* Security: Removed the last use of the `create_function()` API, which was removed in PHP 8.0
+* Fixed: The dashboard "Latest News" headline now links to the news item itself instead of a hardcoded destination
+* Fixed: The update hook no longer reads missing array keys or queries the database during unrelated plugin updates
+* Fixed: The unsupported-PHP admin notice now reports the real minimum version (7.4) instead of 7.3
+* Changed: The dashboard header banner now promotes CSS &amp; JavaScript Toolbox PLUS, and is hidden for users who already have PLUS installed
+* Enhancement: Removed unused images, dead stylesheet rules, stray OS metadata files and a duplicate PHP version check from the plugin package
+
 = 12.0.6 =
 * Security: Fixed sanitization vulnerability in Template Manager
 * Security: Fixed sanitization vulnerability in Blocks Coupling controller
@@ -487,6 +498,11 @@ Fix: Fatal error: 'break' not in the 'loop' or 'switch' context in /path/to/wp-c
 * Launch:  This is the very first release of CSS & JavaScript Toolbox
 
 == Upgrade Notice ==
+= 12.0.7 =
+* Security: Hardened the AJAX access point against unvalidated module and action names
+* Security: Removed the last use of `create_function()`, removed in PHP 8.0
+* Maintenance: Dead files, unused images and a duplicate PHP version check removed from the package
+
 = 11.5 =
 * Compatibility: PHP version 8+
 * Compatibility: MySQL version 8+

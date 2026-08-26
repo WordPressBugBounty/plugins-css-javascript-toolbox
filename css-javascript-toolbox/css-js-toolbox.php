@@ -3,7 +3,7 @@
 Plugin Name: CSS & JavaScript Toolbox
 Plugin URI: https://css-javascript-toolbox.com/
 Description: Easily add CSS, JavaScript, HTML and PHP code to unique CJT code blocks and assign them anywhere on your website.
-Version: 12.0.6
+Version: 12.0.7
 Author: Wipeout Media
 Author URI: https://css-javascript-toolbox.com
 Text Domain: css-javascript-toolbox
@@ -86,11 +86,11 @@ class CJTPlugin extends CJTHookableClass
 	const DB_VERSION = '1.7';
 
     /**
-    * put your comment there...
+    * Minimum PHP version required to run the plugin.
     *
-    * @var mixed
+    * @var string
     */
-    CONST ENV_PHP_MIN_VERSION = '5.3';
+    CONST ENV_PHP_MIN_VERSION = '7.4';
 
 	/**
 	*
@@ -100,7 +100,7 @@ class CJTPlugin extends CJTHookableClass
 	/**
 	*
 	*/
-	const VERSION = '12.0.6';
+	const VERSION = '12.0.7';
 
 	/**
 	*
@@ -234,18 +234,16 @@ class CJTPlugin extends CJTHookableClass
 	}
 
     /**
-    * put your comment there...
+    * Check the PHP version and register an admin notice when it is too old.
     *
+    * @return bool TRUE when the environment can run the plugin.
     */
     public static function isCompatibleEnvironment()
     {
 
         if ( version_compare( PHP_VERSION, self::ENV_PHP_MIN_VERSION, '<' ) )
         {
-
-            $importHTMLFileCode = 'require "includes" . DIRECTORY_SEPARATOR . "html" . DIRECTORY_SEPARATOR . "incompatible_environment_message.html.php";';
-
-            add_action( 'admin_notices', create_function( '', $importHTMLFileCode ) );
+            add_action( 'admin_notices', 'cjtIncompatiblePHPNotice' );
 
             return false;
         }
@@ -361,6 +359,18 @@ class CJTPlugin extends CJTHookableClass
 
 }// End Class
 
+/**
+* Admin notice shown when the site runs an unsupported PHP version.
+*/
+function cjtIncompatiblePHPNotice()
+{ ?>
+	<div class="notice notice-error">
+		<p><strong>CJT</strong>: CSS &amp; JavaScript Toolbox needs PHP version <?php echo esc_html( CJTPlugin::ENV_PHP_MIN_VERSION ); ?> or greater to operate properly. Please ask your hosting provider to update the PHP version.<br>
+		Current PHP Version: <strong><?php echo esc_html( phpversion() ); ?></strong>
+		</p>
+	</div>
+<?php }
+
 // Dont run if environment (e.g PHP version) is incomaptible
 if ( ! CJTPlugin::isCompatibleEnvironment() )
 {
@@ -371,41 +381,37 @@ if ( ! CJTPlugin::isCompatibleEnvironment() )
 CJTPlugin::define( 'CJTPlugin', array( 'hookType' => CJTWordpressEvents::HOOK_FILTER ) );
 
 // Let's Go!
-function deprecatedPHPCheck()
-{ ?>
-	<div class="notice notice-error">
-		<p><strong>CJT</strong>: CSS & JavaScript Toolbox need PHP version 7.3 or greater to operate properly. Please ask your hosting provider to update the PHP version.<br>
-		Current PHP Version: <strong><?php echo phpversion(); ?></strong>
-		</p>
-	</div>
-<?php }
-
-if ( version_compare( phpversion(), 7, '>=' ) ) {
-	CJTPlugin::getInstance();
-} else {
-	add_action( 'admin_notices', 'deprecatedPHPCheck' );
-}
+CJTPlugin::getInstance();
 
 add_action( 'upgrader_process_complete', 'upgradeCheck',10, 2 );
 
 function upgradeCheck( $upgrader_object, $options ) {
-	$CJTPluginPath = plugin_basename( __FILE__ );
+	// Bulk plugin updates are the only case we care about. Bail early on
+	// everything else so we never touch the DB on unrelated upgrades.
+	if ( ! isset( $options['action'], $options['type'] ) ) {
+		return;
+	}
+
+	if ( $options['action'] !== 'update' || $options['type'] !== 'plugin' ) {
+		return;
+	}
+
+	if ( empty( $options['plugins'] ) || ! is_array( $options['plugins'] ) ) {
+		return;
+	}
+
+	if ( ! in_array( plugin_basename( __FILE__ ), $options['plugins'], true ) ) {
+		return;
+	}
+
+	// Only ever record this once.
+	if ( ! empty( get_option( '__existing_cjt_user' ) ) ) {
+		return;
+	}
 
 	global $wpdb;
-	$table_name = $wpdb->base_prefix.'cjtoolbox_blocks';
+	$table_name = $wpdb->base_prefix . 'cjtoolbox_blocks';
 	$query = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
-	$preCheck = get_option( '__existing_cjt_user' );
 
-	if ( $options['action'] == 'update' && $options['type'] == 'plugin' ) {
-		foreach( $options['plugins'] as $each_plugin ) {
-			if ( $each_plugin == $CJTPluginPath ) {
-				$preCheck = get_option( '__existing_cjt_user' );
-
-				// Only create it once.
-				if ( empty( $preCheck ) ) {
-					update_option( '__existing_cjt_user', $wpdb->get_var( $query ) === $table_name ? 'true' : 'false' );
-				}
-			}
-		}
-	}
+	update_option( '__existing_cjt_user', $wpdb->get_var( $query ) === $table_name ? 'true' : 'false' );
 }

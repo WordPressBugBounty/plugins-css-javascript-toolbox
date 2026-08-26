@@ -18,7 +18,7 @@ $blockView = $this->getBlockView();
             <input  name='cjtoolbox[<?php echo $blockView->block->id ?>][name]'
                     type='text'
                     class='block-name'
-                    value='<?php echo $blockView->block->name ?>'
+                    value='<?php echo esc_attr($blockView->block->name) ?>'
                     title='<?php echo cssJSToolbox::getText('Click to update Block name') ?>'
                     maxlength='50' />
             

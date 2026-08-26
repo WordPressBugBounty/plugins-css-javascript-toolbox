@@ -12,9 +12,9 @@
 					$rowClassIndex = $rowIndex & 0x01; // $rowIndex passed through getTemplates $params.
 					$rowClass = " {$CSSClasses[$rowClassIndex]}";
 ?>
-					<li id="backup-row-<?php echo $this->currentBackup->id ?>" class="backup-row<?php echo $rowClass ?>">
-						<span class="backup-name"><?php echo $this->currentBackup->name ?></span> <?php echo cssJSToolbox::getText('By') ?> <?php echo $this->currentBackup->owner->display_name ?> @ <?php echo $this->currentBackup->created ?>
+					<li id="backup-row-<?php echo (int) $this->currentBackup->id ?>" class="backup-row<?php echo esc_attr($rowClass) ?>">
+						<span class="backup-name"><?php echo esc_html($this->currentBackup->name) ?></span> <?php echo cssJSToolbox::getText('By') ?> <?php echo esc_html($this->currentBackup->owner->display_name) ?> @ <?php echo esc_html($this->currentBackup->created) ?>
 						<span class="backup-tasks">
-							<a class="restore" href="#<?php echo $this->currentBackup->id ?>">Restore</a> | <a class="delete" href="#<?php echo $this->currentBackup->id ?>">Delete</a>
+							<a class="restore" href="#<?php echo (int) $this->currentBackup->id ?>">Restore</a> | <a class="delete" href="#<?php echo (int) $this->currentBackup->id ?>">Delete</a>
 						</span>
 					</li>

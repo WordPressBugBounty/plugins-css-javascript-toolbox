@@ -34,7 +34,7 @@ $displaySection =   isset($_GET['show_section']) ?
 
 <?php do_action( CJTPluggableHelper::ACTION_BLOCK_SCREEN_INFO_TOP, $this->info ); ?>
 
-		<li><span style="font-weight:bold"><?php echo cssJSToolbox::getText('Shortcode') ?>: </span><span class="cjt-block-shortcode-text"><input type="text" readonly="readonly" value="<?php echo $this->info->shortcode; ?>"></span>
+		<li><span style="font-weight:bold"><?php echo cssJSToolbox::getText('Shortcode') ?>: </span><span class="cjt-block-shortcode-text"><input type="text" readonly="readonly" value="<?php echo esc_attr($this->info->shortcode); ?>"></span>
 
 		    <a class="copyshortcode" href="#">Copy Shortcode</a>
 
@@ -92,7 +92,7 @@ $displaySection =   isset($_GET['show_section']) ?
             <ul class="assignment-list">
             <?php foreach ($inTags as $tagID) :
                 $theTag = get_tag($tagID); ?>
-                <li><?php echo $theTag->name; ?></li>
+                <li><?php echo esc_html( $theTag->name ); ?></li>
             <?php endforeach; ?>
             </ul>
             <?php endif;
@@ -101,7 +101,7 @@ $displaySection =   isset($_GET['show_section']) ?
             <h4>Assigned Auxiliaries</h4>
             <ul class="assignment-list">
             <?php foreach ($inAux as $auxItem) : ?>
-                <li><?php echo $auxItem; ?></li>
+                <li><?php echo esc_html( $auxItem ); ?></li>
             <?php endforeach; ?>
             </ul>
             <?php endif;
@@ -110,7 +110,7 @@ $displaySection =   isset($_GET['show_section']) ?
             <h4>Assigned URLs</h4>
             <ul class="assignment-list">
             <?php foreach ($inLinks as $link) : ?>
-                <li><?php echo $link; ?></li>
+                <li><?php echo esc_html( $link ); ?></li>
             <?php endforeach; ?>
             </ul>
             <?php endif;
@@ -119,7 +119,7 @@ $displaySection =   isset($_GET['show_section']) ?
             <h4>Assigned Expressions</h4>
             <ul class="assignment-list">
             <?php foreach ($inExps as $exp) : ?>
-                <li><?php echo $exp; ?></li>
+                <li><?php echo esc_html( $exp ); ?></li>
             <?php endforeach; ?>
             </ul>
             <?php endif;

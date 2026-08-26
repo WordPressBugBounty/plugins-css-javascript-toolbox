@@ -45,7 +45,7 @@ class CJTManageAccessPoint extends CJTPageAccessPoint {
 			cssJSToolbox::getText('CSS & JavaScript Toolbox'),
 			'administrator',
 			CJTPlugin::PLUGIN_REQUEST_ID,
-			array(&$this->controller, '_doAction'),
+			array($this, 'renderPage'),
 			CJTOOLBOX_VIEWS_URL . '/blocks/manager/public/images/menu.svg'
 		);
 		// Process request if installed!

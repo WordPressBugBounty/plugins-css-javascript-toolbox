@@ -67,7 +67,16 @@ class CJTBlocksAjaxController extends CJTAjaxController {
 		$response = array();
 		// If viewName not provided read it from request vars.
 		if (!$viewName) {
-			$viewName = filter_input(INPUT_GET, 'viewName', FILTER_SANITIZE_STRING);
+			$viewName = filter_input(INPUT_GET, 'viewName', FILTER_UNSAFE_RAW);
+			$viewName = is_string($viewName) ? sanitize_text_field($viewName) : null;
+		}
+		// $viewName is interpolated into a filesystem path by CJTController::getView(),
+		// which require_once's "views/blocks/{$viewName}/view.php". Restrict it to the
+		// known block views so traversal sequences can never reach that include.
+		$allowedBlockViews = array('cjt-block', 'block', 'metabox', 'create-metabox');
+		if ($viewName && !in_array($viewName, $allowedBlockViews, true)) {
+			$this->httpCode = '403 Forbidden';
+			return;
 		}
 		// Prepare parameters.
 		$defaultBlockName = 'block_' . hexdec(substr(md5(time()), 0, 6));
@@ -91,6 +100,8 @@ class CJTBlocksAjaxController extends CJTAjaxController {
 			  $blockData[$name] = $_GET[$name];
 			}
 		}
+		// Harden the block name server-side (CVE-2025-13533 defence in depth).
+		$blockData['name'] = self::sanitizeBlockName($blockData['name']);
 		// Import block model.
 		require_once CJTOOLBOX_MODELS_PATH . '/block.php';
 		$block = new CJTBlockModel($blockData);
@@ -140,7 +151,8 @@ class CJTBlocksAjaxController extends CJTAjaxController {
 			'blocks/new' => array(),
 		);
 		// Prepare parameters.
-		$viewName = filter_input(INPUT_GET, 'viewName', FILTER_SANITIZE_STRING);
+		$viewName = filter_input(INPUT_GET, 'viewName', FILTER_UNSAFE_RAW);
+		$viewName = is_string($viewName) ? sanitize_text_field($viewName) : '';
 		if (array_key_exists($viewName, $allowedViews) === FALSE) {
 		  $this->httpCode = '403 Forbidden';
 		}
@@ -205,6 +217,11 @@ class CJTBlocksAjaxController extends CJTAjaxController {
 				$blockData = ( object ) $postedblockPartialData;
 				$blockData->id = $id;
 
+				// Harden the block name server-side (CVE-2025-13533 defence in depth).
+				if ( isset( $blockData->name ) ) {
+					$blockData->name = self::sanitizeBlockName( $blockData->name );
+				}
+
 				// Recalculate pinPoint field value.
 				! $calculatePinPoint or ( CJTBlockModel::arrangePins( $blockData ) && CJTBlockModel::calculateBlockPinPoint( $blockData ) );
 
@@ -252,6 +269,31 @@ class CJTBlocksAjaxController extends CJTAjaxController {
 		// Centralized orders to be shared between all users!
 		$this->model->setOrder($order);
 		$this->response = array('order' => $order, 'state' => 'saved');
+	}
+
+	/**
+	* Sanitize a code-block name coming from the request.
+	*
+	* Defence-in-depth for the stored-XSS issue (CVE-2025-13533): the client-side UI
+	* already restricts block names to A-Z, 0-9, space, '-' and '_', but that check is
+	* trivially bypassed (e.g. via an HTTP proxy). We enforce the exact same contract
+	* server-side so characters that could break out of an HTML attribute/element -
+	* such as < > " ' - can never be persisted. Output is still escaped at every sink
+	* as the primary defence; this simply keeps the stored data clean.
+	*
+	* @param mixed $name Raw name value from the request.
+	* @return string Sanitized name (never empty).
+	*/
+	public static function sanitizeBlockName($name) {
+		// Keep only the documented allowed characters.
+		$name = preg_replace('/[^A-Za-z0-9 _-]/', '', (string) $name);
+		// Collapse to a trimmed value and guard against an empty result.
+		$name = trim($name);
+		if ($name === '') {
+			$name = 'block_' . hexdec(substr(md5((string) time()), 0, 6));
+		}
+		// Respect the 50 char column/UI limit.
+		return substr($name, 0, 50);
 	}
 
 } // End class.

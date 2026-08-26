@@ -106,7 +106,9 @@ class CJTBlocksCreateMetaBoxView extends CJTView {
 	* 
 	*/
 	public function getMetaboxName() {
-		return $this->getBlock()->name;
+		// Escape the block name: this value is used as the meta box title, which
+		// WordPress prints as raw HTML. Prevents stored XSS (CVE-2025-13533).
+		return esc_html($this->getBlock()->name);
 	}
 	
 	/**
